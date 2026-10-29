@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>บันทึกซื้อ/ขาย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--navy2:#16305A;--gold:#C9A227;--goldL:#EADBA6;--cream:#FBF6E9;--ink:#1B2433;--muted:#6B7280;--line:#E7E1D2;--buy:#0E9F6E;--sell:#D9475A;--bg:#F6F3EA}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Sarabun',system-ui,sans-serif;font-size:17px}
+body.big{font-size:20px}
+header{background:var(--navy);color:#fff;padding:18px 16px 16px;position:relative}
+header .k{color:var(--gold);font-size:.72em;font-weight:700;letter-spacing:.06em}
+header h1{margin:4px 0 0;font-size:1.45em;font-weight:800}
+header .who{color:#C8D1E0;font-size:.85em;margin-top:2px}
+main{padding:14px 16px 120px;max-width:560px;margin:0 auto}
+.seg{display:flex;gap:10px;margin-bottom:14px}
+.seg button{flex:1;border:2px solid currentColor;background:#fff;border-radius:14px;padding:13px 0;font:inherit;font-weight:800;font-size:1.1em}
+.seg .b{color:var(--buy)} .seg .s{color:var(--sell)}
+.seg .b.on{background:var(--buy);color:#fff;border-color:var(--buy)} .seg .s.on{background:var(--sell);color:#fff;border-color:var(--sell)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 2px;font:inherit;font-size:.86em;font-weight:700;color:var(--ink)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--gold)}
+.tabs button:disabled{opacity:.35}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+label.l{display:block;font-size:.8em;font-weight:700;color:var(--muted);margin-bottom:6px}
+input.in{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;font-size:1.15em;font-weight:700;color:var(--ink);background:#fff;outline:none}
+input.in:focus{border-color:var(--gold);box-shadow:0 0 0 3px #C9A22733}
+input.in.up{text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.chip{border:1px solid var(--line);background:var(--cream);border-radius:999px;padding:7px 13px;font:inherit;font-size:.86em;font-weight:700;color:var(--navy)}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip.px{background:#EAF6F0;border-color:#BFE5D3;color:#0B6B4B}
+.row{display:flex;gap:8px;align-items:center}
+.row .in{flex:1}
+.toggle{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex:0 0 auto}
+.toggle button{border:0;background:#fff;padding:12px 12px;font:inherit;font-size:.85em;font-weight:700;color:var(--muted)}
+.toggle button.on{background:var(--navy);color:#fff}
+.hint{font-size:.8em;color:var(--muted);margin-top:7px;min-height:1em}
+.warn{color:var(--sell);font-weight:700}
+details{margin-top:4px} summary{font-size:.85em;color:var(--navy2);font-weight:700;padding:6px 0;cursor:pointer}
+.pv{background:var(--cream);border:1px solid var(--goldL);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.pv .big{font-size:1.5em;font-weight:800;color:var(--navy)}
+.pv .s{font-size:.85em;color:var(--ink);margin-top:3px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+.bar button{width:100%;max-width:560px;display:block;margin:0 auto;border:0;border-radius:14px;padding:16px;font:inherit;font-size:1.15em;font-weight:800;background:var(--gold);color:var(--navy)}
+.bar button:disabled{background:#E5E7EB;color:#9CA3AF}
+.done{text-align:center;padding:40px 18px}
+.tick{width:76px;height:76px;border-radius:50%;background:var(--buy);color:#fff;font-size:44px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.done h2{margin:0 0 6px;color:var(--navy)}
+.done .pill{display:inline-block;color:#fff;border-radius:12px;padding:6px 14px;font-weight:700;margin:6px 0 14px}
+.done table{width:100%;max-width:360px;margin:0 auto 22px;background:var(--cream);border-radius:12px;padding:8px 12px;font-size:.95em}
+.done td{padding:4px 0} .done td:last-child{text-align:right;font-weight:700}
+.btn2{display:block;width:100%;max-width:360px;margin:0 auto 10px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px;font:inherit;font-weight:800;color:var(--navy)}
+.btn2.p{background:var(--gold);border-color:var(--gold)}
+.msg{padding:40px 20px;text-align:center;color:var(--muted)}
+.hidden{display:none!important}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #C9A22755;border-top-color:var(--gold);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header><div class="k" id="kicker">PORTFOLIO</div><h1 id="title">บันทึกซื้อ/ขาย</h1><div class="who" id="who">&nbsp;</div></header>
+<div id="loading" class="msg"><span class="spin"></span> <span id="loadingT">กำลังโหลด…</span></div>
+<main id="form" class="hidden">
+  <div class="seg"><button class="b on" data-side="BUY" id="sBuy">ซื้อ</button><button class="s" data-side="SELL" id="sSell">ขาย</button></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="card">
+    <label class="l" id="itemL">หุ้น</label>
+    <input class="in up" id="item" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <div class="chips" id="itemChips"></div>
+    <div class="hint" id="itemHint"></div>
+  </div>
+  <div class="card">
+    <label class="l" id="qtyL">จำนวน</label>
+    <div class="row"><input class="in" id="qty" inputmode="decimal" autocomplete="off"><div class="toggle hidden" id="unitT"></div></div>
+    <div class="chips" id="qtyChips"></div>
+    <div class="hint" id="qtyHint"></div>
+  </div>
+  <div class="card">
+    <label class="l" id="priceL">ราคา</label>
+    <input class="in" id="price" inputmode="decimal" autocomplete="off">
+    <div class="chips" id="priceChips"></div>
+    <div class="hint" id="priceHint"></div>
+    <details id="more"><summary id="moreS">วันที่ / ค่าคอมมิชชัน</summary>
+      <div class="row" style="margin-top:8px"><div style="flex:1"><label class="l" id="dateL">วันที่</label><input class="in" id="date" type="date"></div>
+      <div style="flex:1" id="feeBox"><label class="l" id="feeL">ค่าคอมฯ</label><input class="in" id="fee" inputmode="decimal" placeholder="0"></div></div>
+    </details>
+  </div>
+  <div class="pv hidden" id="pv"></div>
+</main>
+<div id="done" class="done hidden"></div>
+<div class="bar hidden" id="bar"><button id="save" disabled>บันทึก</button></div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js" charset="utf-8"></script>
+<script>
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbzCcb3YYZwsRTqpi9owr4UlIlsgNckaOmoH9CYAUH-m0SR-bbGiK1u04_kSG2mMM-okYg/exec', LIFF_ID = '2012272799-E87o90o3';
+var MOCK = /[?&]mock=1/.test(location.search) || LIFF_ID.indexOf('__') === 0;
+var T = {
+  th: { title: 'บันทึกซื้อ/ขาย', buy: 'ซื้อ', sell: 'ขาย', TH: 'หุ้นไทย', US: 'หุ้น US', FUND: 'กองทุน', GOLD: 'ทองคำ', stock: 'ชื่อหุ้น', fund: 'รหัสกองทุน', goldType: 'ประเภททอง',
+    shares: 'จำนวนหุ้น', amount: 'จำนวนเงิน (บาท)', units: 'จำนวนหน่วย', weight: 'น้ำหนัก', price: 'ราคาต่อหุ้น', nav: 'NAV ต่อหน่วย (เว้นว่าง = NAV ล่าสุด)', goldPrice: 'ราคาต่อบาททอง',
+    more: 'วันที่ / ค่าคอมมิชชัน', date: 'วันที่', fee: 'ค่าคอมฯ', save: 'บันทึก', saving: 'กำลังบันทึก…', have: 'มีอยู่', all: 'ทั้งหมด', half: 'ครึ่งหนึ่ง', last: 'ล่าสุด',
+    getting: 'กำลังดึงราคา…', tapUse: 'แตะเพื่อใช้ราคานี้', noPx: 'หาราคาไม่ได้ — พิมพ์ราคาที่ได้จริง', total: 'ยอดรวม', after: 'หลังบันทึกจะมี', avg: 'ทุนเฉลี่ย', sellAll: 'ขายหมด',
+    tooMany: 'มีอยู่แค่', okTitle: 'บันทึกเรียบร้อย', again: '＋ บันทึกรายการต่อไป', close: 'ปิด', loading: 'กำลังโหลด…', amtMode: 'บาท', unitMode: 'หน่วย',
+    bar: 'ทองคำแท่ง', ornament: 'ทองรูปพรรณ', savings: 'ออมทอง', baht: 'บาท', salung: 'สลึง', gram: 'กรัม', estNav: 'ใช้ NAV ล่าสุดเป็นค่าประมาณ', held: 'ที่มี', watch: 'ที่สนใจ', recent: 'ล่าสุด' },
+  en: { title: 'Record a trade', buy: 'Buy', sell: 'Sell', TH: 'Thai', US: 'US', FUND: 'Fund', GOLD: 'Gold', stock: 'Stock', fund: 'Fund code', goldType: 'Gold type',
+    shares: 'Shares', amount: 'Amount (THB)', units: 'Units', weight: 'Weight', price: 'Price per share', nav: 'NAV per unit (blank = latest NAV)', goldPrice: 'Price per baht-weight',
+    more: 'Date / commission', date: 'Date', fee: 'Commission', save: 'Save', saving: 'Saving…', have: 'You have', all: 'All', half: 'Half', last: 'Last',
+    getting: 'Getting the price…', tapUse: 'tap to use it', noPx: 'No price found — type the price you got', total: 'Total', after: 'After this you will have', avg: 'avg cost', sellAll: 'sold out',
+    tooMany: 'You only have', okTitle: 'Saved', again: '＋ Record another', close: 'Close', loading: 'Loading…', amtMode: 'THB', unitMode: 'Units',
+    bar: 'Gold bar', ornament: 'Ornament', savings: 'Gold savings', baht: 'baht', salung: 'salung', gram: 'gram', estNav: 'Latest NAV used as an estimate', held: 'Held', watch: 'Watching', recent: 'Recent' }
+};
+var S = { side: 'BUY', kind: 'TH', unit: 'baht', fmode: 'amount', px: null, data: null, idToken: '', L: T.th, busy: false };
+var $ = function (id) { return document.getElementById(id); };
+var nf = function (n, d) { return Number(n).toLocaleString('en-US', { maximumFractionDigits: d === undefined ? 4 : d }); };
+var sym = function () { return S.kind === 'US' ? '$' : '฿'; };
+var num = function (v) { var n = parseFloat(String(v || '').replace(/[,฿$\s]/g, '')); return isFinite(n) ? n : 0; };
+
+function api(action, extra) {
+  if (MOCK) return mockApi(action, extra);
+  var body = Object.assign({ idToken: S.idToken, action: action }, extra || {});
+  return fetch(GAS_URL + '?api=liff', { method: 'POST', body: JSON.stringify(body) }).then(function (r) { return r.json(); });
+}
+
+function start() {
+  if (MOCK) return load();
+  liff.init({ liffId: LIFF_ID }).then(function () {
+    if (!liff.isLoggedIn()) return liff.login({ redirectUri: location.href });
+    S.idToken = liff.getIDToken();
+    load();
+  }).catch(function (e) { fail('LINE: ' + (e.message || e)); });
+}
+function load() {
+  api('init').then(function (d) {
+    if (!d.ok) return fail(d.message || d.error);
+    S.data = d; S.L = T[d.lang] || T.th;
+    document.documentElement.lang = d.lang; if (d.simple) document.body.classList.add('big');
+    S.kind = d.holdings.TH.length || !d.holdings.US.length ? 'TH' : 'US';
+    $('date').value = d.today; $('date').max = d.today;
+    // Opened from a report card ("record this trade"): ?side=BUY&kind=TH&item=SC&price=1.93
+    var q = new URLSearchParams(location.search), qk = String(q.get('kind') || '').toUpperCase();
+    if (/^(BUY|SELL)$/.test(String(q.get('side') || '').toUpperCase())) S.side = q.get('side').toUpperCase();
+    if (['TH', 'US', 'FUND', 'GOLD'].indexOf(qk) >= 0) S.kind = qk;
+    if (q.get('item')) { if (S.kind === 'GOLD') S.item = q.get('item').toLowerCase(); else $('item').value = q.get('item').toUpperCase(); }
+    if (num(q.get('price')) > 0) $('price').value = q.get('price');
+    texts(); render(); if (currentItem()) fetchPrice(); $('loading').classList.add('hidden'); $('form').classList.remove('hidden'); $('bar').classList.remove('hidden');
+  }).catch(function (e) { fail(String(e.message || e)); });
+}
+function fail(m) { $('loading').innerHTML = '⚠️ ' + m; }
+
+function texts() {
+  var L = S.L;
+  $('title').textContent = L.title; document.title = L.title; $('who').textContent = S.data.name;
+  $('sBuy').textContent = L.buy; $('sSell').textContent = L.sell; $('moreS').textContent = L.more; $('dateL').textContent = L.date; $('feeL').textContent = L.fee;
+}
+function held(kind) { return (S.data.holdings[kind] || []); }
+function heldOf(item) { var h = held(S.kind).filter(function (x) { return x.t === item; })[0]; return h || null; }
+
+function render() {
+  var L = S.L, k = S.kind, d = S.data;
+  ['sBuy', 'sSell'].forEach(function (id) { $(id).classList.toggle('on', $(id).dataset.side === S.side); });
+  $('tabs').innerHTML = ['TH', 'US', 'FUND', 'GOLD'].map(function (x) {
+    var dis = S.side === 'SELL' && !held(x).length;
+    return '<button data-k="' + x + '" class="' + (x === k ? 'on' : '') + '"' + (dis ? ' disabled' : '') + '>' + L[x] + '</button>';
+  }).join('');
+  var gold = k === 'GOLD', fund = k === 'FUND';
+  $('itemL').textContent = gold ? L.goldType : fund ? L.fund : L.stock;
+  $('item').classList.toggle('hidden', gold);
+  var chips = [];
+  if (gold) chips = ['bar', 'ornament', 'savings'].map(function (t) { var h = heldOf(t); return { v: t, l: L[t] + (h ? ' · ' + nf(h.baht, 2) : '') }; });
+  else {
+    var seen = {}, add = function (v, tag) { if (v && !seen[v]) { seen[v] = 1; chips.push({ v: v, l: v }); } };
+    held(k).forEach(function (h) { add(h.t); });
+    if (S.side === 'BUY') { (d.recent || []).forEach(function (r) { if (r.m === k) add(r.t); }); ((d.watch || {})[k] || []).forEach(function (t) { add(t); }); }
+  }
+  var cur = gold ? S.item : $('item').value.trim().toUpperCase();
+  $('itemChips').innerHTML = chips.slice(0, 14).map(function (c) { return '<button class="chip' + (c.v === cur ? ' on' : '') + '" data-item="' + c.v + '">' + c.l + '</button>'; }).join('');
+  // quantity
+  var ut = $('unitT');
+  if (fund) { $('qtyL').textContent = S.fmode === 'units' ? L.units : L.amount; ut.innerHTML = tog([['amount', L.amtMode], ['units', L.unitMode]], S.fmode); ut.classList.remove('hidden'); }
+  else if (gold) { $('qtyL').textContent = L.weight; ut.innerHTML = tog([['baht', L.baht], ['salung', L.salung], ['gram', L.gram]], S.unit); ut.classList.remove('hidden'); }
+  else { $('qtyL').textContent = L.shares; ut.classList.add('hidden'); }
+  var qc = [], h = heldOf(gold ? S.item : cur);
+  var have = h ? (gold ? h.baht : fund ? h.units : h.shares) : 0;
+  if (S.side === 'SELL' && have > 0 && !(fund && S.fmode === 'amount')) {
+    var unitHave = gold && S.unit === 'gram' ? have * 15.244 : gold && S.unit === 'salung' ? have * 4 : have;
+    qc.push({ v: unitHave, l: L.all + ' (' + nf(unitHave) + ')' });
+    if (k === 'TH' && have >= 200) qc.push({ v: Math.floor(have / 200) * 100, l: L.half });
+  }
+  var presets = fund ? (S.fmode === 'units' ? [100, 500, 1000] : [1000, 5000, 10000, 50000]) : gold ? (S.unit === 'gram' ? [1, 5, 15.244] : S.unit === 'salung' ? [1, 2] : [0.5, 1, 2]) : k === 'TH' ? [100, 500, 1000, 5000] : [1, 5, 10];
+  presets.forEach(function (n) { qc.push({ v: n, l: fund && S.fmode === 'amount' ? '฿' + nf(n) : nf(n) }); });
+  $('qtyChips').innerHTML = qc.map(function (c) { return '<button class="chip" data-qty="' + c.v + '">' + c.l + '</button>'; }).join('');
+  $('qtyHint').textContent = have > 0 ? L.have + ' ' + nf(have) + (gold ? ' ' + L.baht : fund ? ' ' + L.unitMode : '') : '';
+  // price
+  $('priceL').textContent = fund ? L.nav : gold ? L.goldPrice : L.price;
+  $('feeBox').classList.toggle('hidden', fund || gold);
+  priceChip();
+  preview();
+}
+function tog(opts, on) { return opts.map(function (o) { return '<button data-u="' + o[0] + '" class="' + (o[0] === on ? 'on' : '') + '">' + o[1] + '</button>'; }).join(''); }
+
+function priceChip() {
+  var L = S.L, p = S.px;
+  if (S.pxBusy) { $('priceChips').innerHTML = ''; $('priceHint').innerHTML = '<span class="spin"></span> ' + L.getting; return; }
+  if (p && p.price > 0) { $('priceChips').innerHTML = '<button class="chip px" data-px="' + p.price + '">' + L.last + ' ' + sym() + nf(p.price) + '</button>'; $('priceHint').textContent = L.tapUse + (p.date ? ' (' + p.date + ')' : ''); }
+  else { $('priceChips').innerHTML = ''; $('priceHint').textContent = currentItem() && S.pxTried ? L.noPx : ''; }
+}
+function currentItem() { return S.kind === 'GOLD' ? S.item || '' : $('item').value.trim().toUpperCase(); }
+
+var pxTimer = null;
+function fetchPrice() {
+  var item = currentItem(); S.px = null; S.pxTried = false;
+  clearTimeout(pxTimer);
+  if (!item) { S.pxBusy = false; priceChip(); return; }
+  S.pxBusy = true; priceChip();
+  var key = S.kind + ':' + item + ':' + S.side;
+  pxTimer = setTimeout(function () {
+    api('price', { kind: S.kind, item: item, side: S.side }).then(function (r) {
+      if (key !== S.kind + ':' + currentItem() + ':' + S.side) return;
+      S.pxBusy = false; S.pxTried = true; S.px = r.ok ? r.price : null; priceChip(); preview();
+    }).catch(function () { S.pxBusy = false; S.pxTried = true; priceChip(); });
+  }, 350);
+}
+
+function preview() {
+  var L = S.L, k = S.kind, q = num($('qty').value), p = num($('price').value), fee = num($('fee').value), item = currentItem(), h = heldOf(item), pv = $('pv');
+  var ok = !!item && q > 0 && (k === 'FUND' || p > 0), html = '', warn = '';
+  if (k === 'GOLD') {
+    var baht = S.unit === 'gram' ? q / 15.244 : S.unit === 'salung' ? q / 4 : q;
+    if (S.side === 'SELL' && h && baht > h.baht + 1e-6) warn = L.tooMany + ' ' + nf(h.baht, 2) + ' ' + L.baht;
+    if (q > 0 && p > 0) html = '<div class="s">' + L.total + '</div><div class="big">฿' + nf(baht * p, 0) + '</div><div class="s">' + nf(baht, 4) + ' ' + L.baht + ' × ฿' + nf(p, 0) + '</div>';
+  } else if (k === 'FUND') {
+    var nav = p || (S.px && S.px.price) || 0, units = S.fmode === 'units' ? q : (nav ? q / nav : 0), amt = S.fmode === 'units' ? q * nav : q;
+    if (S.side === 'SELL' && h && units > h.units + 1e-6) warn = L.tooMany + ' ' + nf(h.units) + ' ' + L.unitMode;
+    if (q > 0 && nav) html = '<div class="s">' + L.total + '</div><div class="big">฿' + nf(amt, 2) + '</div><div class="s">≈ ' + nf(units, 4) + ' ' + L.unitMode + ' @ ' + nf(nav) + (p ? '' : ' · ' + L.estNav) + '</div>';
+  } else if (q > 0 && p > 0) {
+    var amt2 = q * p + (S.side === 'BUY' ? fee : -fee), have = h ? h.shares : 0, after = S.side === 'BUY' ? have + q : have - q;
+    if (S.side === 'SELL' && q > have + 1e-9) warn = L.tooMany + ' ' + nf(have);
+    var avg = S.side === 'BUY' ? ((have * (h && h.avg || 0)) + q * p + fee) / after : h && h.avg;
+    html = '<div class="s">' + L.total + '</div><div class="big">' + sym() + nf(amt2, 2) + '</div><div class="s">' + (after > 0 ? L.after + ' ' + nf(after) + (avg ? ' · ' + L.avg + ' ' + sym() + nf(avg, 2) : '') : L.sellAll) + '</div>';
+  }
+  if (warn) { html += '<div class="s warn">⚠️ ' + warn + '</div>'; ok = false; }
+  pv.innerHTML = html; pv.classList.toggle('hidden', !html);
+  $('save').disabled = !ok || S.busy; $('save').textContent = S.busy ? L.saving : (S.side === 'BUY' ? '✅ ' + L.save + ' · ' + L.buy : '✅ ' + L.save + ' · ' + L.sell);
+}
+
+function save() {
+  if ($('save').disabled) return;
+  var q = num($('qty').value), k = S.kind;
+  var body = { kind: k, side: S.side, item: currentItem(), price: num($('price').value), fee: num($('fee').value), date: $('date').value };
+  if (k === 'GOLD') { body.unit = S.unit === 'gram' ? 'gram' : 'baht'; body.qty = S.unit === 'salung' ? q / 4 : q; }
+  else if (k === 'FUND') { body.fmode = S.fmode; body.qty = q; var h = heldOf(body.item); body.all = S.side === 'SELL' && S.fmode === 'units' && h && Math.abs(q - h.units) < 1e-6; }
+  else body.qty = q;
+  S.busy = true; preview();
+  api('save', body).then(function (r) {
+    S.busy = false;
+    if (!r.ok) { preview(); alert('⚠️ ' + (r.message || r.error)); return; }
+    done(r);
+  }).catch(function (e) { S.busy = false; preview(); alert('⚠️ ' + (e.message || e)); });
+}
+function done(r) {
+  var L = S.L;
+  $('form').classList.add('hidden'); $('bar').classList.add('hidden');
+  $('done').innerHTML = '<div class="tick">✓</div><h2>' + L.okTitle + '</h2><div class="pill" style="background:' + (r.side === 'BUY' ? 'var(--buy)' : 'var(--sell)') + '">' + esc(r.title) + '</div>' +
+    '<table>' + (r.lines || []).map(function (l) { return '<tr><td>' + esc(l[0]) + '</td><td>' + esc(l[1]) + '</td></tr>'; }).join('') + '</table>' +
+    '<button class="btn2 p" id="again">' + L.again + '</button><button class="btn2" id="closeB">' + L.close + '</button>';
+  $('done').classList.remove('hidden');
+  if (!MOCK && liff.isInClient()) liff.sendMessages([{ type: 'text', text: '✅ ' + r.title }]).catch(function () { /* summary only */ });
+  $('again').onclick = function () { location.reload(); };
+  $('closeB').onclick = function () { if (!MOCK && liff.isInClient()) liff.closeWindow(); else location.reload(); };
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+// events
+$('sBuy').onclick = $('sSell').onclick = function () { S.side = this.dataset.side; if (S.side === 'SELL' && !held(S.kind).length) { var k = ['TH', 'US', 'FUND', 'GOLD'].filter(function (x) { return held(x).length; })[0]; if (k) S.kind = k; } render(); if (currentItem()) fetchPrice(); };
+$('tabs').onclick = function (e) { var b = e.target.closest('[data-k]'); if (!b || b.disabled) return; S.kind = b.dataset.k; S.item = ''; $('item').value = ''; $('qty').value = ''; $('price').value = ''; S.px = null; S.pxTried = false; render(); };
+$('itemChips').onclick = function (e) { var b = e.target.closest('[data-item]'); if (!b) return; if (S.kind === 'GOLD') S.item = b.dataset.item; else $('item').value = b.dataset.item; $('price').value = ''; render(); fetchPrice(); };
+$('item').oninput = function () { render(); clearTimeout(S.itemT); S.itemT = setTimeout(fetchPrice, 600); };
+$('qtyChips').onclick = function (e) { var b = e.target.closest('[data-qty]'); if (!b) return; $('qty').value = b.dataset.qty; preview(); };
+$('unitT').onclick = function (e) { var b = e.target.closest('[data-u]'); if (!b) return; if (S.kind === 'FUND') S.fmode = b.dataset.u; else S.unit = b.dataset.u; $('qty').value = ''; render(); };
+$('priceChips').onclick = function (e) { var b = e.target.closest('[data-px]'); if (!b) return; $('price').value = b.dataset.px; preview(); };
+['qty', 'price', 'fee'].forEach(function (id) { $(id).oninput = preview; });
+$('save').onclick = save;
+
+// local preview without LINE (?mock=1)
+function mockApi(action, x) {
+  return new Promise(function (ok) { setTimeout(function () {
+    if (action === 'init') ok({ ok: true, name: 'Dew', lang: /lang=en/.test(location.search) ? 'en' : 'th', simple: /big=1/.test(location.search), today: new Date().toISOString().slice(0, 10), cash: { THB: 12000, USD: 300 },
+      holdings: { TH: [{ t: 'SC', shares: 2600, avg: 1.93 }, { t: 'PTT', shares: 300, avg: 33.1 }, { t: 'GUNKUL', shares: 1000, avg: 2.4 }], US: [{ t: 'AMD', shares: 1.2, avg: 410 }, { t: 'NVDA', shares: 3, avg: 120 }],
+        FUND: [{ t: 'K-FIXEDA', units: 1200.5, avg: 12.1, name: '' }], GOLD: [{ t: 'bar', baht: 1 }] },
+      watch: { TH: ['AMATA', 'ITC'], US: ['CEG'] }, recent: [{ m: 'TH', t: 'SC' }, { m: 'US', t: 'CLS' }], gold: { barBuy: 65900, barSell: 66050, ornBuy: 64600, ornSell: 66850 } });
+    else if (action === 'price') ok({ ok: true, price: { price: x.kind === 'GOLD' ? 66050 : x.kind === 'FUND' ? 12.3456 : x.kind === 'US' ? 182.4 : 1.95, date: '' } });
+    else ok({ ok: true, side: x.side, title: (x.side === 'BUY' ? 'ซื้อ ' : 'ขาย ') + x.item + ' ' + x.qty + ' @ ' + x.price, lines: [['ตอนนี้มี', '5,200 หุ้น'], ['ทุนเฉลี่ย', '฿1.94']] });
+  }, 300); });
+}
+start();
+</script>
+</body>
+</html>
